@@ -1,8 +1,9 @@
 enableDestroy      = require 'server-destroy'
 octobluExpress     = require 'express-octoblu'
+express            = require 'express'
 MeshbluAuth        = require 'express-meshblu-auth'
 Router             = require './router'
-CodecovService = require './services/codecov-service'
+CodecovService     = require './services/codecov-service'
 debug              = require('debug')('codecov-service:server')
 
 class Server
@@ -16,6 +17,8 @@ class Server
     app = octobluExpress({ @logFn, @disableLogging })
 
     meshbluAuth = new MeshbluAuth @meshbluConfig
+    app.use express.static 'public'
+
     app.use meshbluAuth.auth()
     app.use meshbluAuth.gateway()
 

@@ -2,7 +2,10 @@
   "name": "codecov-service",
   "version": "1.0.0",
   "description": "codecov-service an Octoblu Service",
-  "keywords": ["Octoblu", "Service"],
+  "keywords": [
+    "Octoblu",
+    "Service"
+  ],
   "homepage": "https://github.com/octoblu/codecov-service",
   "bugs": "https://github.com/octoblu/codecov-service/issues",
   "author": {
@@ -16,14 +19,22 @@
   },
   "scripts": {
     "start": "node command.js",
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc npm test",
+    "mocha:json": "mocha --reporter json > coverage/mocha.json",
+    "test:watch": "mocha -w -R mocha-multi --reporter-options spec=-,mocha-osx-reporter=-"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-subset": "^1.3.0",
+    "coffee-script": "^1.10.0",
     "mocha": "^3.0.2",
+    "mocha-multi": "^0.9.1",
+    "mocha-osx-reporter": "^0.1.2",
+    "nyc": "^8.3.0",
     "request": "^2.74.0",
     "shmock": "^0.8.1",
-    "sinon": "^1.17.5",
+    "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
@@ -35,5 +46,16 @@
     "meshblu-config": "^6.0.0",
     "server-destroy": "^1.0.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text-summary",
+      "lcov",
+      "json"
+    ],
+    "extension": [
+      ".coffee"
+    ]
+  }
 }
