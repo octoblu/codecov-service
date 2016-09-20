@@ -1,16 +1,13 @@
 language: node_js
 node_js:
 - '5'
+services:
+- mongo
 after_success:
-- npm run coverage
-- npm run mocha:json
-- bash <(curl -s https://codecov.io/bash)
-- bash <(curl -s https://codecov.octoblu.com/bash)
-deploy:
-  provider: npm
-  email: serveradmin@octoblu.com
-  api_key:
-    secure: yuxsVAB9ESL/r4Gqe6YYqYUwRwYgf4JZ5izAs9DUjhw9EJMEAEfv3YiGbDvMH7YLVEJFwEnJrSKISa50zUoQOSDXp/8mUOWr00rtfkA7gCLL2JQbLThH7hBBcqsIZPUGB7VEXo+UJwWfBIRvP2C22CqPoFp+3bRt1Pr0Uxky2eWE75ZXpOA1fAq0RvzAGkO5sXFaCOUZPvZqKlYH3q3h/gzCevdaY71PCoCU85KJQQXes8RlFdbpJ5bniNl9xqGLdtsrpr+hcSQkL4ibNAh7QQ0qXMPSZRBFIucI7yQpaDITyY/rjEFkJQnRXY02SQuF1ZYty5PCVa4AWjrDsDbtuE9N/crn566Yn/pZq1iNoLcsly4DQuYjYKDVToneYhIw2eNKzb2HQHr5bxVfquzCB5EG7B///r8gzP5ZVp+26b0swbwmL6FOCB+97w8RrTtI/GASfAcAv4hzGxKNCO7ax8jbemPOeEUP4usqJR6lG0DyYtY3h+sUSMr8M1Tvhw+BiPNS2SnxvANJcsr1f4gIaMzreLBNZr8iQaTwYwBTXhFBlNvx396Jq/aAnJ/yaCPdDiRW4nAwshBUBFTqKmvgsrohLsC5K16Rhd39xBWNrDyU+pX0DMcqYlrYIRFFe39XuqQgjJzI8TCtY8E3PoLUk41mhyh4wyphLNj4kzmyxYg=
-  on:
-    tags: true
-    branches: true
+  - npm run coverage
+  - 'npm run mocha:json'
+  - 'bash <(curl -s https://codecov.io/bash)'
+  - 'bash <(curl -s https://codecov.octoblu.com/bash)'
+notifications:
+  webhooks: >-
+    https://sqrtofsaturn:57be102bf79af666ccbf7fd1@deploy-state.octoblu.com/deployments/travis-ci/org
