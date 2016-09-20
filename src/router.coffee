@@ -7,7 +7,7 @@ class Router
   route: (app) =>
     codecovController = new CodecovController {@codecovService}
 
-    app.get '/hello', codecovController.hello
+    app.post '/upload/:owner_name/:repo_name', codecovController.upload
     # e.g. app.put '/resource/:id', someController.update
 
 module.exports = Router

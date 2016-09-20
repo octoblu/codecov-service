@@ -5,10 +5,12 @@ MeshbluAuth        = require 'express-meshblu-auth'
 Router             = require './router'
 CodecovService     = require './services/codecov-service'
 debug              = require('debug')('codecov-service:server')
+mongojs            = require 'mongojs'
 
 class Server
-  constructor: ({@logFn, @disableLogging, @port, @meshbluConfig})->
-    throw new Error 'Missing meshbluConfig' unless @meshbluConfig?
+  constructor: ({@logFn, @disableLogging, @port, @meshbluConfig, @mongodbUri})->
+    throw new Error 'Server requires: meshbluConfig' unless @meshbluConfig?
+    throw new Error 'Server requires: mongodbUri' unless @mongodbUri?
 
   address: =>
     @server.address()
@@ -19,11 +21,13 @@ class Server
     meshbluAuth = new MeshbluAuth @meshbluConfig
     app.use express.static 'public'
 
-    app.use meshbluAuth.auth()
-    app.use meshbluAuth.gateway()
+    # app.use meshbluAuth.auth()
+    # app.use meshbluAuth.gateway()
 
-    codecovService = new CodecovService
-    router = new Router {@meshbluConfig, codecovService}
+    db = mongojs @mongodbUri, ['metrics']
+    datastore = db.metrics
+    codecovService = new CodecovService {datastore}
+    router = new Router {@meshbluConfig, codecovService, datastore}
 
     router.route app
 

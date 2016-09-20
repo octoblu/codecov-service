@@ -1,2 +1,3 @@
 #!/bin/bash
-echo "FOO"
+
+curl -X POST -H 'Content-Type: application/json' -d @coverage/mocha.json "https://codecov.octoblu.com/upload/${TRAVIS_REPO_SLUG}"

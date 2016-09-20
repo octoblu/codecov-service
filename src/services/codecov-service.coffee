@@ -1,7 +1,8 @@
 class CodecovService
-  doHello: ({hasError}, callback) =>
-    return callback @_createError(500, 'Not enough dancing!') if hasError?
-    callback()
+  constructor: ({@datastore}) ->
+
+  upload: ({owner_name, repo_name, body}, callback) =>
+    @datastore.insert {owner_name, repo_name, body}, callback
 
   _createError: (code, message) =>
     error = new Error message
