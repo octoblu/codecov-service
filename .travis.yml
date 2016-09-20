@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '5'
 services:
-- mongo
+- mongodb
 after_success:
   - npm run coverage
   - 'npm run mocha:json'
