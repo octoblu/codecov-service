@@ -9,9 +9,9 @@ class CodecovController
       return res.sendError(error) if error?
       res.sendStatus(200)
 
-  webhook: (req, res) =>
+  webhookCodecovIO: (req, res) =>
     body = req.body
-    @codecovService.webhook { body }, (error) =>
+    @codecovService.webhook { type: 'codecov.io', body }, (error) =>
       return res.sendError(error) if error?
       res.sendStatus(200)
 

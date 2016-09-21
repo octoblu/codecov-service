@@ -5,7 +5,7 @@ Server        = require '../../src/server'
 mongojs       = require 'mongojs'
 
 
-describe 'Webhook', ->
+describe 'Webhook codecov.io', ->
   beforeEach (done) ->
     @db = mongojs 'test-codecov-service', ['webhooks']
     @webhooks = @db.webhooks
@@ -53,7 +53,7 @@ describe 'Webhook', ->
       expect(@response.statusCode).to.equal 200
 
     it 'should insert the json into the project', (done) ->
-      @webhooks.findOne {}, (error, result) =>
+      @webhooks.findOne type: 'codecov.io', (error, result) =>
         expect(result).to.exist
         expect(result.body).to.deep.equal blah: 'blah'
         done()
