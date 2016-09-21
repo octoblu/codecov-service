@@ -1,6 +1,6 @@
 {
   "name": "codecov-service",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "codecov-service an Octoblu Service",
   "keywords": [
     "Octoblu",
