@@ -1,13 +1,13 @@
-CodecovController = require './controllers/codecov-controller'
+WebhookController = require './controllers/webhook-controller'
 
 class Router
-  constructor: ({@codecovService}) ->
-    throw new Error 'Missing codecovService' unless @codecovService?
+  constructor: ({@webhookService}) ->
+    throw new Error 'Missing webhookService' unless @webhookService?
 
   route: (app) =>
-    codecovController = new CodecovController {@codecovService}
+    webhookController = new WebhookController {@webhookService}
 
-    app.post '/webhooks/mocha/:owner_name/:repo_name', codecovController.webhookMocha
-    app.post '/webhooks/codecov.io', codecovController.webhookCodecovIO
+    app.post '/webhooks/:type', webhookController.create
+    app.post '/webhooks/:type/:owner_name/:repo_name', webhookController.create
 
 module.exports = Router

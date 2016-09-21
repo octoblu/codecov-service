@@ -4,8 +4,7 @@ enableDestroy = require 'server-destroy'
 Server        = require '../../src/server'
 mongojs       = require 'mongojs'
 
-
-describe 'Webhook codecov.io', ->
+describe 'Webhooks', ->
   beforeEach (done) ->
     @db = mongojs 'test-codecov-service', ['webhooks']
     @webhooks = @db.webhooks
@@ -37,7 +36,7 @@ describe 'Webhook codecov.io', ->
     @meshblu.destroy()
     @server.destroy()
 
-  describe 'On POST /webhook', ->
+  describe 'On POST /webhooks/codecov.io', ->
     beforeEach (done) ->
       userAuth = new Buffer('some-uuid:some-token').toString 'base64'
 
@@ -54,6 +53,27 @@ describe 'Webhook codecov.io', ->
 
     it 'should insert the json into the project', (done) ->
       @webhooks.findOne type: 'codecov.io', (error, result) =>
+        expect(result).to.exist
+        expect(result.body).to.deep.equal blah: 'blah'
+        done()
+
+  describe 'On POST /webhooks/something/foo/blah', ->
+    beforeEach (done) ->
+      userAuth = new Buffer('some-uuid:some-token').toString 'base64'
+
+      options =
+        uri: '/webhooks/something:else/foo/blah'
+        baseUrl: "http://localhost:#{@serverPort}"
+        json: blah: 'blah'
+
+      request.post options, (error, @response, @body) =>
+        done error
+
+    it 'should return a 200', ->
+      expect(@response.statusCode).to.equal 200
+
+    it 'should insert the json into the project', (done) ->
+      @webhooks.findOne type: 'something:else', owner_name: 'foo', repo_name: 'blah', (error, result) =>
         expect(result).to.exist
         expect(result.body).to.deep.equal blah: 'blah'
         done()
