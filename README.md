@@ -1,10 +1,10 @@
 # codecov-service
 
+[![Build Status](https://travis-ci.org/octoblu/codecov-service.svg?branch=master)](https://travis-ci.org/octoblu/codecov-service)
+[![Test Coverage](https://codecov.io/gh/octoblu/codecov-service/branch/master/graph/badge.svg)](https://codecov.io/gh/octoblu/codecov-service)
 [![Dependency status](http://img.shields.io/david/octoblu/codecov-service.svg?style=flat)](https://david-dm.org/octoblu/codecov-service)
 [![devDependency Status](http://img.shields.io/david/dev/octoblu/codecov-service.svg?style=flat)](https://david-dm.org/octoblu/codecov-service#info=devDependencies)
-[![Build Status](http://img.shields.io/travis/octoblu/codecov-service.svg?style=flat)](https://travis-ci.org/octoblu/codecov-service)
-
-[![NPM](https://nodei.co/npm/codecov-service.svg?style=flat)](https://npmjs.org/package/codecov-service)
+[![Slack Status](http://community-slack.octoblu.com/badge.svg)](http://community-slack.octoblu.com)
 
 # Table of Contents
 
@@ -42,7 +42,7 @@ npm install
 node command.js
 ```
 
-## Docker 
+## Docker
 
 ### Development
 
@@ -68,7 +68,7 @@ env DEBUG='codecov-service*' node command.js
 env DEBUG='codecov-service*' node command.js
 ```
 
-## Test 
+## Test
 
 ```bash
 npm test
