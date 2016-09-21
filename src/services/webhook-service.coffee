@@ -1,8 +1,9 @@
 class WebhookService
-  constructor: ({@db}) ->
+  constructor: ({@redis}) ->
 
   create: ({type, owner_name, repo_name, body}, callback) =>
-    @db.webhooks.insert {type, body, owner_name, repo_name}, callback
+    data = JSON.stringify { type, body, owner_name, repo_name }
+    @redis.lpush 'webhooks', data, callback
 
   _createError: (code, message) =>
     error = new Error message

@@ -14,6 +14,8 @@ describe 'bash file', ->
       disableLogging: true
       logFn: @logFn
       mongodbUri: 'test-codecov-service-metrics'
+      redisUri: 'localhost'
+      redisNamespace: 'test-codecov'
       meshbluConfig:
         hostname: 'localhost'
         protocol: 'http'

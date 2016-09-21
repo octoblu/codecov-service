@@ -2,13 +2,16 @@ shmock        = require 'shmock'
 request       = require 'request'
 enableDestroy = require 'server-destroy'
 Server        = require '../../src/server'
-mongojs       = require 'mongojs'
+Redis         = require 'ioredis'
+RedisNS       = require '@octoblu/redis-ns'
 
 describe 'Webhooks', ->
   beforeEach (done) ->
-    @db = mongojs 'test-codecov-service', ['webhooks']
-    @webhooks = @db.webhooks
-    @webhooks.remove done
+    client = new Redis 'localhost', dropBufferSupport: true
+    @redis = new RedisNS 'test-codecov', client
+    client.on 'ready', (error) =>
+      return done error if error?
+      @redis.del 'webhooks', done
 
   beforeEach (done) ->
     @meshblu = shmock 0xd00d
@@ -20,6 +23,8 @@ describe 'Webhooks', ->
       disableLogging: true
       logFn: @logFn
       mongodbUri: 'test-codecov-service'
+      redisUri: 'localhost'
+      redisNamespace: 'test-codecov'
       meshbluConfig:
         hostname: 'localhost'
         protocol: 'http'
@@ -52,10 +57,12 @@ describe 'Webhooks', ->
       expect(@response.statusCode).to.equal 200
 
     it 'should insert the json into the project', (done) ->
-      @webhooks.findOne type: 'codecov.io', (error, result) =>
-        expect(result).to.exist
-        expect(result.body).to.deep.equal blah: 'blah'
+      @redis.brpop 'webhooks', 1, (error, result) =>
+        return done error if error?
+        { body } = JSON.parse result[1]
+        expect(body).to.deep.equal blah: 'blah'
         done()
+      return # promises
 
   describe 'On POST /webhooks/something/foo/blah', ->
     beforeEach (done) ->
@@ -73,7 +80,11 @@ describe 'Webhooks', ->
       expect(@response.statusCode).to.equal 200
 
     it 'should insert the json into the project', (done) ->
-      @webhooks.findOne type: 'something:else', owner_name: 'foo', repo_name: 'blah', (error, result) =>
-        expect(result).to.exist
-        expect(result.body).to.deep.equal blah: 'blah'
+      @redis.brpop 'webhooks', 1, (error, result) =>
+        return done error if error?
+        { body, owner_name, repo_name } = JSON.parse result[1]
+        expect(body).to.deep.equal blah: 'blah'
+        expect(owner_name).to.equal 'foo'
+        expect(repo_name).to.equal 'blah'
         done()
+      return # promises

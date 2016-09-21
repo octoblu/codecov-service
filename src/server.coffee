@@ -6,11 +6,24 @@ Router             = require './router'
 WebhookService     = require './services/webhook-service'
 debug              = require('debug')('codecov-service:server')
 mongojs            = require 'mongojs'
+Redis              = require 'ioredis'
+RedisNS            = require '@octoblu/redis-ns'
 
 class Server
-  constructor: ({@logFn, @disableLogging, @port, @meshbluConfig, @mongodbUri})->
+  constructor: (options={})->
+    {
+      @logFn
+      @disableLogging
+      @port
+      @meshbluConfig
+      @mongodbUri
+      @redisNamespace
+      @redisUri
+    } = options
     throw new Error 'Server requires: meshbluConfig' unless @meshbluConfig?
     throw new Error 'Server requires: mongodbUri' unless @mongodbUri?
+    throw new Error 'Server requires: redisUri' unless @redisUri?
+    throw new Error 'Server requires: redisNamespace' unless @redisNamespace?
 
   address: =>
     @server.address()
@@ -25,8 +38,11 @@ class Server
     # app.use meshbluAuth.gateway()
 
     db = mongojs @mongodbUri, ['metrics', 'webhooks']
-    webhookService = new WebhookService {db}
-    router = new Router {@meshbluConfig, webhookService, db}
+    client = new Redis @redisUri, dropBufferSupport: true
+    redis = new RedisNS @redisNamespace, client
+
+    webhookService = new WebhookService {redis}
+    router = new Router {webhookService}
 
     router.route app
 
