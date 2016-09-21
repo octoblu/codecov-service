@@ -5,11 +5,11 @@ Server        = require '../../src/server'
 mongojs       = require 'mongojs'
 
 
-describe 'Upload', ->
+describe 'Webhook mocha', ->
   beforeEach (done) ->
-    @db = mongojs 'test-codecov-service', ['metrics']
-    @metrics = @db.metrics
-    @metrics.remove done
+    @db = mongojs 'test-codecov-service', ['webhooks']
+    @webhooks = @db.webhooks
+    @webhooks.remove done
 
   beforeEach (done) ->
     @meshblu = shmock 0xd00d
@@ -53,7 +53,11 @@ describe 'Upload', ->
       expect(@response.statusCode).to.equal 200
 
     it 'should insert the json into the project', (done) ->
-      @metrics.findOne owner_name: 'octoblu', repo_name: 'sample-project', (error, result) =>
+      @webhooks.findOne type: 'mocha', (error, result) =>
         expect(result).to.exist
-        expect(result.body).to.deep.equal blah: 'blah'
+        expectedBody =
+          owner_name: 'octoblu'
+          repo_name: 'sample-project'
+          blah: 'blah'
+        expect(result.body).to.deep.equal expectedBody
         done()

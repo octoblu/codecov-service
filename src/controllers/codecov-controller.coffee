@@ -2,10 +2,12 @@ class CodecovController
   constructor: ({@codecovService}) ->
     throw new Error 'Missing codecovService' unless @codecovService?
 
-  upload: (req, res) =>
+  webhookMocha: (req, res) =>
     { owner_name, repo_name } = req.params
     body = req.body
-    @codecovService.upload { owner_name, repo_name, body }, (error) =>
+    body.owner_name = owner_name
+    body.repo_name = repo_name
+    @codecovService.webhook { type: 'mocha', body }, (error) =>
       return res.sendError(error) if error?
       res.sendStatus(200)
 

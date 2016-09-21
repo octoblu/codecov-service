@@ -7,7 +7,7 @@ class Router
   route: (app) =>
     codecovController = new CodecovController {@codecovService}
 
-    app.post '/upload/:owner_name/:repo_name', codecovController.upload
+    app.post '/webhooks/mocha/:owner_name/:repo_name', codecovController.webhookMocha
     app.post '/webhooks/codecov.io', codecovController.webhookCodecovIO
 
 module.exports = Router
