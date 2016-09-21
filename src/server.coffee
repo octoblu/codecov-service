@@ -24,10 +24,9 @@ class Server
     # app.use meshbluAuth.auth()
     # app.use meshbluAuth.gateway()
 
-    db = mongojs @mongodbUri, ['metrics']
-    datastore = db.metrics
-    codecovService = new CodecovService {datastore}
-    router = new Router {@meshbluConfig, codecovService, datastore}
+    db = mongojs @mongodbUri, ['metrics', 'webhooks']
+    codecovService = new CodecovService {db}
+    router = new Router {@meshbluConfig, codecovService, db}
 
     router.route app
 

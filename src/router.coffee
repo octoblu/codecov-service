@@ -8,6 +8,6 @@ class Router
     codecovController = new CodecovController {@codecovService}
 
     app.post '/upload/:owner_name/:repo_name', codecovController.upload
-    # e.g. app.put '/resource/:id', someController.update
+    app.post '/webhooks/codecov.io', codecovController.webhook
 
 module.exports = Router

@@ -5,11 +5,11 @@ Server        = require '../../src/server'
 mongojs       = require 'mongojs'
 
 
-describe 'Upload', ->
+describe 'Webhook', ->
   beforeEach (done) ->
-    @db = mongojs 'test-codecov-service', ['metrics']
-    @metrics = @db.metrics
-    @metrics.remove done
+    @db = mongojs 'test-codecov-service', ['webhooks']
+    @webhooks = @db.webhooks
+    @webhooks.remove done
 
   beforeEach (done) ->
     @meshblu = shmock 0xd00d
@@ -37,12 +37,12 @@ describe 'Upload', ->
     @meshblu.destroy()
     @server.destroy()
 
-  describe 'On POST /upload', ->
+  describe 'On POST /webhook', ->
     beforeEach (done) ->
       userAuth = new Buffer('some-uuid:some-token').toString 'base64'
 
       options =
-        uri: '/upload/octoblu/sample-project'
+        uri: '/webhooks/codecov.io'
         baseUrl: "http://localhost:#{@serverPort}"
         json: blah: 'blah'
 
@@ -53,7 +53,7 @@ describe 'Upload', ->
       expect(@response.statusCode).to.equal 200
 
     it 'should insert the json into the project', (done) ->
-      @metrics.findOne owner_name: 'octoblu', repo_name: 'sample-project', (error, result) =>
+      @webhooks.findOne {}, (error, result) =>
         expect(result).to.exist
         expect(result.body).to.deep.equal blah: 'blah'
         done()
