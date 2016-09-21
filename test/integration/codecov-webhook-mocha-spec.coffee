@@ -37,12 +37,12 @@ describe 'Webhook mocha', ->
     @meshblu.destroy()
     @server.destroy()
 
-  describe 'On POST /upload', ->
+  describe 'On POST /webhooks/mocha', ->
     beforeEach (done) ->
       userAuth = new Buffer('some-uuid:some-token').toString 'base64'
 
       options =
-        uri: '/upload/octoblu/sample-project'
+        uri: '/webhooks/mocha/octoblu/sample-project'
         baseUrl: "http://localhost:#{@serverPort}"
         json: blah: 'blah'
 
