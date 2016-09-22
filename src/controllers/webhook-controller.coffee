@@ -7,6 +7,6 @@ class WebhookController
     body = req.body
     @webhookService.create { type, body, owner_name, repo_name }, (error) =>
       return res.sendError(error) if error?
-      res.status(200).end()
+      res.status(201).end()
 
 module.exports = WebhookController

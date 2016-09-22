@@ -4,6 +4,7 @@ express            = require 'express'
 MeshbluAuth        = require 'express-meshblu-auth'
 Router             = require './router'
 WebhookService     = require './services/webhook-service'
+MetricService      = require './services/metric-service'
 debug              = require('debug')('codecov-service:server')
 mongojs            = require 'mongojs'
 Redis              = require 'ioredis'
@@ -41,8 +42,9 @@ class Server
     client = new Redis @redisUri, dropBufferSupport: true
     redis = new RedisNS @redisNamespace, client
 
-    webhookService = new WebhookService {redis}
-    router = new Router {webhookService}
+    webhookService = new WebhookService { redis }
+    metricService = new MetricService { db }
+    router = new Router { metricService, webhookService }
 
     router.route app
 

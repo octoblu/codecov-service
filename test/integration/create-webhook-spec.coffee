@@ -53,8 +53,8 @@ describe 'Webhooks', ->
       request.post options, (error, @response, @body) =>
         done error
 
-    it 'should return a 200', ->
-      expect(@response.statusCode).to.equal 200
+    it 'should return a 201', ->
+      expect(@response.statusCode).to.equal 201
 
     it 'should insert the json into the project', (done) ->
       @redis.brpop 'webhooks', 1, (error, result) =>
@@ -76,8 +76,8 @@ describe 'Webhooks', ->
       request.post options, (error, @response, @body) =>
         done error
 
-    it 'should return a 200', ->
-      expect(@response.statusCode).to.equal 200
+    it 'should return a 201', ->
+      expect(@response.statusCode).to.equal 201
 
     it 'should insert the json into the project', (done) ->
       @redis.brpop 'webhooks', 1, (error, result) =>
