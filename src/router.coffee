@@ -11,6 +11,7 @@ class Router
     metricController = new MetricController {@metricService}
 
     app.get '/metrics', metricController.list
+    app.get '/metrics/summary', metricController.summary
     app.post '/webhooks/:type', webhookController.create
     app.post '/webhooks/:type/:owner_name/:repo_name', webhookController.create
 

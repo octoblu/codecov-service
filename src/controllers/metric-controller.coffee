@@ -7,4 +7,9 @@ class MetricController
       return res.sendError(error) if error?
       res.status(200).send(data)
 
+  summary: (req, res) =>
+    @metricService.summary (error, data) =>
+      return res.sendError(error) if error?
+      res.status(200).send(data)
+
 module.exports = MetricController
