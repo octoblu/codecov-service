@@ -20,6 +20,7 @@ class MetricService
         coverage_ratio: ""
         defect_density: 0
         test_cases_duration_ms: 0
+        project_count: _.size data
 
       _.each data, (datum) =>
         summary.total_lines_count += datum.total_lines_count ? 0

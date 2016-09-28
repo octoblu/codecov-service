@@ -96,4 +96,5 @@ describe 'Summary Metrics', ->
         open_issues_count: 5
         test_cases_duration_ms: 25521
         defect_density: "0.02"
+        project_count: 2
       expect(@body).to.containSubset expectedSummary
