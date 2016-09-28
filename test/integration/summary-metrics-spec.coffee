@@ -42,32 +42,34 @@ describe 'Summary Metrics', ->
   describe 'On GET /metrics/summary', ->
     beforeEach (done) ->
       metric =
-        owner_name: "octoblu",
-        repo_name: "meshblu-core-dispatcher",
-        test_cases_count: 24,
-        passing_test_cases_count: 24,
-        failing_test_cases_count: 0,
-        pending_test_cases_count: 0,
-        test_cases_duration_ms: 25021,
-        total_lines_count: 232,
-        lines_covered_count: 184,
-        lines_missed_count: 48,
-        branches_covered_count: 8,
+        owner_name: "octoblu"
+        repo_name: "meshblu-core-dispatcher"
+        test_cases_count: 24
+        passing_test_cases_count: 24
+        failing_test_cases_count: 0
+        pending_test_cases_count: 0
+        test_cases_duration_ms: 25021
+        total_lines_count: 232
+        lines_covered_count: 184
+        lines_missed_count: 48
+        branches_covered_count: 8
+        open_issues_count: 5
       @metrics.insert metric, done
 
     beforeEach (done) ->
       metric =
-        owner_name: "octoblu",
-        repo_name: "meshblu-core-something",
-        test_cases_count: 26,
-        passing_test_cases_count: 24,
-        failing_test_cases_count: 0,
-        pending_test_cases_count: 0,
-        test_cases_duration_ms: 500,
-        total_lines_count: 22,
-        lines_covered_count: 14,
-        lines_missed_count: 1,
-        branches_covered_count: 8,
+        owner_name: "octoblu"
+        repo_name: "meshblu-core-something"
+        test_cases_count: 26
+        passing_test_cases_count: 24
+        failing_test_cases_count: 0
+        pending_test_cases_count: 0
+        test_cases_duration_ms: 500
+        total_lines_count: 22
+        lines_covered_count: 14
+        lines_missed_count: 1
+        branches_covered_count: 8
+        open_issues_count: null
       @metrics.insert metric, done
 
     beforeEach (done) ->
@@ -91,4 +93,7 @@ describe 'Summary Metrics', ->
         lines_missed_count: 49
         test_cases_count: 50
         coverage_ratio: "77.95"
+        open_issues_count: 5
+        test_cases_duration_ms: 25521
+        defect_density: "0.02"
       expect(@body).to.containSubset expectedSummary
