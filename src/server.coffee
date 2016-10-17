@@ -39,8 +39,18 @@ class Server
     # app.use meshbluAuth.gateway()
 
     db = mongojs @mongodbUri, ['metrics', 'webhooks']
-    client = new Redis @redisUri, dropBufferSupport: true
+    db.on 'error', @panic
+
+    client = new Redis @redisUri, dropBufferSupport: true, enableOfflineQueue: false
     redis = new RedisNS @redisNamespace, client
+    client.on 'error', @panic
+
+    app.use '/proofoflife', (req, res, next) =>
+      client.set 'test:write', Date.now(), (error) =>
+        return res.sendError error if error
+        db.runCommand {ping: 1}, (error) =>
+          return res.sendError error if error
+          res.send online: true
 
     webhookService = new WebhookService { redis }
     metricService = new MetricService { db }
@@ -56,5 +66,9 @@ class Server
 
   destroy: =>
     @server.destroy()
+
+  panic: (error) =>
+    console.error error.stack
+    process.exit 1
 
 module.exports = Server
