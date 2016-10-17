@@ -49,7 +49,7 @@ Defect Density:                #{defect_density}
         summary.test_cases_count += datum.test_cases_count ? 0
         summary.open_issues_count += datum.open_issues_count ? 0
         summary.test_cases_duration_ms += datum.test_cases_duration_ms ? 0
-        summary.passing_test_cases_count += datum.passing_test_cases_count
+        summary.passing_test_cases_count += datum.passing_test_cases_count ? 0
 
       if summary.total_lines_count > 0
         summary.coverage_ratio = ((summary.lines_covered_count / summary.total_lines_count) * 100).toFixed(2)
