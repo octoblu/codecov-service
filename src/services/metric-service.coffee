@@ -8,10 +8,30 @@ class MetricService
     @datastore.find {}, {'_id': false}, callback
 
   summary: (callback) =>
+    @_summary callback
+
+  scorecard: (callback) =>
+    @_summary (error, summary) =>
+      return callback error if error?
+      { coverage_ratio, defect_density, test_cases_duration_ms, test_cases_automated } = summary
+      build_time_minutes = ((test_cases_duration_ms / 1000) / 60).toFixed(2)
+      scorecard = """
+Quality Dashboard:
+Code Coverage:                 #{coverage_ratio}%
+Test Cases automated:          #{test_cases_automated}%
+Build Time (minutes):          #{build_time_minutes}
+Full test pass time (minutes): #{build_time_minutes}
+Defect Density:                #{defect_density}
+"""
+      callback null, scorecard
+
+  _summary: (callback) =>
     @datastore.find {}, {'_id': false}, (error, data) =>
       return callback error if error?
 
       summary =
+        test_cases_automated: ""
+        passing_test_cases_count: 0
         total_lines_count: 0
         lines_covered_count: 0
         lines_missed_count: 0
@@ -29,10 +49,14 @@ class MetricService
         summary.test_cases_count += datum.test_cases_count ? 0
         summary.open_issues_count += datum.open_issues_count ? 0
         summary.test_cases_duration_ms += datum.test_cases_duration_ms ? 0
+        summary.passing_test_cases_count += datum.passing_test_cases_count
 
       if summary.total_lines_count > 0
         summary.coverage_ratio = ((summary.lines_covered_count / summary.total_lines_count) * 100).toFixed(2)
         summary.defect_density = (summary.open_issues_count / summary.total_lines_count).toFixed(2)
+
+      if summary.test_cases_count > 0
+        summary.test_cases_automated = ((summary.passing_test_cases_count / summary.test_cases_count) * 100).toFixed(2)
 
       return callback null, summary
 

@@ -88,6 +88,8 @@ describe 'Summary Metrics', ->
 
     it 'should return my record', ->
       expectedSummary =
+        test_cases_automated: "96.00"
+        passing_test_cases_count: 48
         total_lines_count: 254
         lines_covered_count: 198
         lines_missed_count: 49
@@ -97,4 +99,62 @@ describe 'Summary Metrics', ->
         test_cases_duration_ms: 25521
         defect_density: "0.02"
         project_count: 2
+      expect(@body).to.containSubset expectedSummary
+
+  describe 'On GET /metrics/scorecard', ->
+    beforeEach (done) ->
+      metric =
+        owner_name: "octoblu"
+        repo_name: "meshblu-core-dispatcher"
+        test_cases_count: 24
+        passing_test_cases_count: 24
+        failing_test_cases_count: 0
+        pending_test_cases_count: 0
+        test_cases_duration_ms: 25021
+        total_lines_count: 232
+        lines_covered_count: 184
+        lines_missed_count: 48
+        branches_covered_count: 8
+        open_issues_count: 5
+      @metrics.insert metric, done
+
+    beforeEach (done) ->
+      metric =
+        owner_name: "octoblu"
+        repo_name: "meshblu-core-something"
+        test_cases_count: 26
+        passing_test_cases_count: 24
+        failing_test_cases_count: 0
+        pending_test_cases_count: 0
+        test_cases_duration_ms: 500
+        total_lines_count: 22
+        lines_covered_count: 14
+        lines_missed_count: 1
+        branches_covered_count: 8
+        open_issues_count: null
+      @metrics.insert metric, done
+
+    beforeEach (done) ->
+      userAuth = new Buffer('some-uuid:some-token').toString 'base64'
+
+      options =
+        uri: '/metrics/scorecard'
+        baseUrl: "http://localhost:#{@serverPort}"
+        json: true
+
+      request.get options, (error, @response, @body) =>
+        done error
+
+    it 'should return a 200', ->
+      expect(@response.statusCode).to.equal 200
+
+    it 'should return my record', ->
+      expectedSummary = """
+Quality Dashboard:
+Code Coverage:                 77.95%
+Test Cases automated:          96.00%
+Build Time (minutes):          0.43
+Full test pass time (minutes): 0.43
+Defect Density:                0.02
+"""
       expect(@body).to.containSubset expectedSummary
