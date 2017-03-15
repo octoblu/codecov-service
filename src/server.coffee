@@ -42,24 +42,25 @@ class Server
     db.on 'error', @panic
 
     client = new Redis @redisUri, dropBufferSupport: true, enableOfflineQueue: false
-    redis = new RedisNS @redisNamespace, client
     client.on 'error', @panic
+    client.on 'ready', =>
+      redis = new RedisNS @redisNamespace, client
 
-    app.use '/proofoflife', (req, res, next) =>
-      client.set 'test:write', Date.now(), (error) =>
-        return res.sendError error if error
-        db.runCommand {ping: 1}, (error) =>
+      app.use '/proofoflife', (req, res, next) =>
+        client.set 'test:write', Date.now(), (error) =>
           return res.sendError error if error
-          res.send online: true
+          db.runCommand {ping: 1}, (error) =>
+            return res.sendError error if error
+            res.send online: true
 
-    webhookService = new WebhookService { redis }
-    metricService = new MetricService { db }
-    router = new Router { metricService, webhookService }
+      webhookService = new WebhookService { redis }
+      metricService = new MetricService { db }
+      router = new Router { metricService, webhookService }
 
-    router.route app
+      router.route app
 
-    @server = app.listen @port, callback
-    enableDestroy @server
+      @server = app.listen @port, callback
+      enableDestroy @server
 
   stop: (callback) =>
     @server.close callback

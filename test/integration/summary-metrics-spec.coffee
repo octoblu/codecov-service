@@ -151,7 +151,9 @@ describe 'Summary Metrics', ->
     it 'should return my record', ->
       expectedSummary = """
 Quality Dashboard:
+Lines Covered:                 198
 Code Coverage:                 77.95%
+Test Cases:                    50
 Test Cases automated:          96.00%
 Build Time (minutes):          0.43
 Full test pass time (minutes): 0.43

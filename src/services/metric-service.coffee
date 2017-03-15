@@ -13,11 +13,21 @@ class MetricService
   scorecard: (callback) =>
     @_summary (error, summary) =>
       return callback error if error?
-      { coverage_ratio, defect_density, test_cases_duration_ms, test_cases_automated } = summary
+      {
+        coverage_ratio,
+        defect_density,
+        test_cases_duration_ms,
+        test_cases_automated,
+        test_cases_count,
+        lines_covered_count,
+      } = summary
+
       build_time_minutes = ((test_cases_duration_ms / 1000) / 60).toFixed(2)
       scorecard = """
 Quality Dashboard:
+Lines Covered:                 #{lines_covered_count}
 Code Coverage:                 #{coverage_ratio}%
+Test Cases:                    #{test_cases_count}
 Test Cases automated:          #{test_cases_automated}%
 Build Time (minutes):          #{build_time_minutes}
 Full test pass time (minutes): #{build_time_minutes}

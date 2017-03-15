@@ -1,3 +1,4 @@
+_             = require 'lodash'
 shmock        = require 'shmock'
 request       = require 'request'
 enableDestroy = require 'server-destroy'
@@ -59,6 +60,7 @@ describe 'Webhooks', ->
     it 'should insert the json into the project', (done) ->
       @redis.brpop 'webhooks', 1, (error, result) =>
         return done error if error?
+        return done new Error "invalid result: #{result}" if _.isEmpty result
         { body } = JSON.parse result[1]
         expect(body).to.deep.equal blah: 'blah'
         done()
