@@ -81,8 +81,8 @@ Defect Density:                #{defect_density}
         lines_covered_count ?= 0
         total_lines_count ?= 0
         datum.coverage_ratio = 0
-        return true if total_lines_count == 0
-        datum.coverage_ratio = (lines_covered_count / datum.total_lines_count) * 100
+        if total_lines_count > 0
+          datum.coverage_ratio = (lines_covered_count / total_lines_count) * 100
         return datum.coverage_ratio < 30
 
       sortedShame = _.sortBy data, 'coverage_ratio'
