@@ -17,4 +17,9 @@ class MetricController
       return res.sendError(error) if error?
       res.status(200).send(data)
 
+  wallofshame: (req, res) =>
+    @metricService.wallofshame (error, data) =>
+      return res.sendError(error) if error?
+      res.status(200).send(data)
+
 module.exports = MetricController

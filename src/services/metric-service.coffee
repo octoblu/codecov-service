@@ -70,4 +70,24 @@ Defect Density:                #{defect_density}
 
       return callback null, summary
 
+  wallofshame: (callback) =>
+    shamecard = """
+)-: Wall of Shame :-(
+"""
+    @datastore.find {}, {'_id': false}, (error, data) =>
+      return callback error if error?
+      data = _.filter data, (datum) =>
+        { lines_covered_count, total_lines_count } = datum
+        lines_covered_count ?= 0
+        total_lines_count ?= 0
+        return true if total_lines_count == 0
+        datum.coverage_ratio = (lines_covered_count / datum.total_lines_count) * 100
+        return datum.coverage_ratio < 30
+
+      sortedShame = _.sortBy data, 'coverage_ratio'
+      _.each sortedShame, (datum) =>
+        shamecard += "\n#{datum.coverage_ratio.toFixed(0)}% #{datum.repo_name}"
+
+      return callback null, shamecard
+
 module.exports = MetricService

@@ -13,6 +13,7 @@ class Router
     app.get '/metrics', metricController.list
     app.get '/metrics/summary', metricController.summary
     app.get '/metrics/scorecard', metricController.scorecard
+    app.get '/metrics/wallofshame', metricController.wallofshame
     app.post '/webhooks/:type', webhookController.create
     app.post '/webhooks/:type/:owner_name/:repo_name', webhookController.create
 
